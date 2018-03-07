@@ -1,3 +1,7 @@
+import sun.reflect.generics.tree.Tree;
+
+import java.time.temporal.Temporal;
+
 public class DataStructuresAndAlgorithm {
 
     int maxSubsequenceSum1(int[] src){
@@ -68,8 +72,7 @@ public class DataStructuresAndAlgorithm {
             return pow(x*x,n/2)*x;
     }
 
-    //LinkedList
-    Node Find(Node head, int value){
+    Node findOnLinkedList(Node head, int value){
         Node tempNode=head;
         while(tempNode!=null){
             if((Integer)tempNode.val==value)
@@ -79,7 +82,7 @@ public class DataStructuresAndAlgorithm {
         return null;
     }
 
-    Node Delete(Node head, int value){
+    Node deleteOnLinkedList(Node head, int value){
         Node tempNode=head,previousNode=head;
         while(tempNode!=null){
             if((Integer)tempNode.val==value){
@@ -94,8 +97,8 @@ public class DataStructuresAndAlgorithm {
         return head;
     }
 
-    Node Insert(Node head, Node previous, int value){
-        Node newNode=new Node(value);
+    Node insertOnLinkedList(Node head, Node previous, int value){
+        Node newNode=new Node<>(value);
         if(previous!=null){
             newNode.next=previous.next;
             previous.next=newNode;
@@ -106,24 +109,7 @@ public class DataStructuresAndAlgorithm {
         return head;
     }
 
-    //LinkedStack
-    Node CreateStack(int value){
-        Node head=new Node(value);
-        return head;
-    }
 
-    Node Push(Node head, int value){
-        Node newNode=new Node(value);
-        newNode.next=head;
-        return newNode;
-    }
-
-    //不适合用参数传递，因为返回值只能返回一个值,因此要适应面向对象的设计
-    Node Pop(Node head){
-        Node popeNode=head;
-        head=head.next;
-        return head;
-    }
 
     int reversePolish(String expression){
         ArrayStack arrayStack=new ArrayStack();
@@ -132,7 +118,7 @@ public class DataStructuresAndAlgorithm {
             String c=expression.substring(i,i+1);
             try{
                 Integer integer=Integer.parseInt(c);
-                arrayStack.push(new Node(integer));
+                arrayStack.push(new Node<>(integer));
             }
             catch (Exception e) {
                 try {
@@ -154,7 +140,7 @@ public class DataStructuresAndAlgorithm {
                         Node two = arrayStack.pop();
                         temp= (Integer)one.val / (Integer)two.val;
                     }
-                    arrayStack.push(new Node(temp));
+                    arrayStack.push(new Node<>(temp));
                     result=temp;
                 }
                 catch (Exception ea){
@@ -165,7 +151,7 @@ public class DataStructuresAndAlgorithm {
         return result;
     }
 
-    String postfixToInfix(String src){
+    String infixToPostfix(String src){
         LinkedStack linkedStack=new LinkedStack();
         StringBuilder stringBuilder=new StringBuilder();
         Node tempNode=null;
@@ -185,9 +171,9 @@ public class DataStructuresAndAlgorithm {
                             break;
                     }
                     if(c.equals("+"))
-                        linkedStack.push(new Node("+"));
+                        linkedStack.push(new Node<>("+"));
                     else
-                        linkedStack.push(new Node("-"));
+                        linkedStack.push(new Node<>("-"));
                 }
                 else if(c.equals("*") || c.equals("/")){
                     while((tempNode=linkedStack.top())!=null){
@@ -199,12 +185,12 @@ public class DataStructuresAndAlgorithm {
                             break;
                     }
                     if(c.equals("*"))
-                        linkedStack.push(new Node("*"));
+                        linkedStack.push(new Node<>("*"));
                     else
-                        linkedStack.push(new Node("/"));
+                        linkedStack.push(new Node<>("/"));
                 }
                 else if(c.equals("(")){
-                    linkedStack.push(new Node("("));
+                    linkedStack.push(new Node<>("("));
                 }
                 else if(c.equals(")")){
                     while((tempNode=linkedStack.pop())!=null){
@@ -223,16 +209,141 @@ public class DataStructuresAndAlgorithm {
         return stringBuilder.toString();
     }
 
+
+    //类似于逆波兰
+    TreeNode postfixToInfixTree(String src){
+        ArrayStack arrayStack=new ArrayStack();
+        for(int i=0;i<src.length();i++){
+            String c=src.substring(i,i+1);
+            try {
+                Integer integer=Integer.parseInt(c);
+                arrayStack.push(new TreeNode<>(c));
+            } catch (Exception e) {
+                TreeNode root=new TreeNode<>(c);
+                root.right=(TreeNode) arrayStack.pop();
+                root.left=(TreeNode) arrayStack.pop();
+                try {
+                    arrayStack.push(root);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return (TreeNode)arrayStack.pop();
+    }
+
+    StringBuilder traverseInfixTree(TreeNode root,StringBuilder appendedTo){
+        if(root==null)
+            return appendedTo;
+        traverseInfixTree(root.left,appendedTo);
+        appendedTo.append(root.val);
+        traverseInfixTree(root.right,appendedTo);
+        return appendedTo;
+    }
+
+    TreeNode findOnSearchTree(TreeNode root,int value){
+        TreeNode currentNode=root;
+        while(currentNode!=null){
+            if((int) currentNode.val > value)
+                currentNode=currentNode.left;
+            else if((int) currentNode.val < value)
+                currentNode=currentNode.right;
+            else
+                return currentNode;
+        }
+        return null;
+    }
+
+    TreeNode insertOnSearchTree(TreeNode root, int value){
+        TreeNode currentNode=root;
+        if(currentNode==null)
+            root=new TreeNode<>(value);
+        else{
+            //只有修改left或right才会生效
+            while(currentNode!=null) {
+                if ((int) currentNode.val > value) {
+                    if (currentNode.left == null)
+                        currentNode.left = new TreeNode<>(value);
+                    else
+                        currentNode=currentNode.left;
+                } else if ((int) currentNode.val < value) {
+                    if (currentNode.right == null)
+                        currentNode.right = new TreeNode<>(value);
+                    else
+                        currentNode=currentNode.right;
+                }else if((int) currentNode.val == value)
+                    break;
+            }
+        }
+        return root;
+    }
+
+    TreeNode deleteOnSearchTree(TreeNode root,int value){
+        TreeNode currentNode=root;
+        TreeNode findNode=null;
+        TreeNode parentNode=null;
+        boolean isLeft=false;
+        while(currentNode!=null){
+            if((int) currentNode.val > value){
+                parentNode=currentNode;
+                isLeft=true;
+                currentNode=currentNode.left;
+            }
+            else if((int) currentNode.val < value){
+                parentNode=currentNode;
+                isLeft=false;
+                currentNode=currentNode.right;
+            }
+            else{
+                findNode=currentNode;
+                break;
+            }
+        }
+        if(findNode!=null){
+            if(findNode.left==null && findNode.right==null){
+                if(isLeft)
+                    parentNode.left=null;
+                else
+                    parentNode.right=null;
+            }
+            else if(findNode.left==null && findNode.right!=null){
+                if(isLeft)
+                    parentNode.left=findNode.right;
+                else
+                    parentNode.right=findNode.right;
+            }else if(findNode.left!=null && findNode.right==null){
+                if(isLeft)
+                    parentNode.left=findNode.left;
+                else
+                    parentNode.right=findNode.left;
+            }else{
+                currentNode=findNode.right;
+                TreeNode minNode=null;
+                while(currentNode.left!=null){
+                    currentNode=currentNode.left;
+                }
+                minNode=currentNode;
+                deleteOnSearchTree(root,(int)minNode.val);
+                findNode.setValue(minNode.val);
+            }
+        }
+        return root;
+    }
+
     public static void main(String[] args){
         DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
-        //System.out.println(d.reversePolish(d.postfixToInfix("1+2*3")));
-        ArrayQueue arrayQueue=new ArrayQueue(2);
-        arrayQueue.enqueue(new Node(5));
-        arrayQueue.enqueue(new Node(4));
-        arrayQueue.enqueue(new Node(3));
-        System.out.println(arrayQueue.dequeue().val);
-        System.out.println(arrayQueue.dequeue().val);
-        System.out.println(arrayQueue.dequeue().val);
+        TreeNode root=d.insertOnSearchTree(null,6);
+        root=d.insertOnSearchTree(root,8);
+        root=d.insertOnSearchTree(root,2);
+        root=d.insertOnSearchTree(root,1);
+        root=d.insertOnSearchTree(root,5);
+        root=d.insertOnSearchTree(root,3);
+        root=d.insertOnSearchTree(root,4);
+        System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
+        root=d.deleteOnSearchTree(root,2);
+        //System.out.println(findNode.val);
+        System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
+        //System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
     }
 
 }
@@ -273,17 +384,16 @@ class ArrayStack{
                 newArray[i]=array[i];
             }
             array=newArray;
-            newArray=null;
         }
         array[currentIndex++]=newHead;
-        //System.out.println("push node "+newHead.val);
+        System.out.println("push node "+newHead.val);
     }
 
     Node pop(){
         if(currentIndex==0)
             return null;
         Node popedNode=array[--currentIndex];
-        //System.out.println("pop node "+popedNode.val);
+        System.out.println("pop node "+popedNode.val);
         return popedNode;
     }
 
@@ -382,7 +492,6 @@ class ArrayQueue{
             }
             array=newArray;
             currentCapacity=newCapacity;
-            newArray=null;
             nextIndex=j;
             headIndex=0;
         }
@@ -396,4 +505,18 @@ class ArrayQueue{
         return array[headIndex++];
     }
 
+}
+
+class TreeNode<T> extends Node<T>{
+    //子类域声明与父相同会有覆盖行为
+    TreeNode<T> left;
+    TreeNode<T> right;
+
+    TreeNode(T value){
+        super(value);
+    }
+
+    void setValue(T value){
+        this.val=value;
+    }
 }
