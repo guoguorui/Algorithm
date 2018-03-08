@@ -1,7 +1,3 @@
-import sun.reflect.generics.tree.Tree;
-
-import java.time.temporal.Temporal;
-
 public class DataStructuresAndAlgorithm {
 
     int maxSubsequenceSum1(int[] src){
@@ -319,41 +315,97 @@ public class DataStructuresAndAlgorithm {
             }else{
                 currentNode=findNode.right;
                 TreeNode minNode=null;
+                TreeNode minParentNode=null;
                 while(currentNode.left!=null){
+                    minParentNode=currentNode;
                     currentNode=currentNode.left;
                 }
                 minNode=currentNode;
-                deleteOnSearchTree(root,(int)minNode.val);
-                findNode.setValue(minNode.val);
+                deleteOnSearchTree(minParentNode,(int)minNode.val);
+                findNode.val=minNode.val;
             }
         }
         return root;
     }
 
-    public static void main(String[] args){
-        DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
-        TreeNode root=d.insertOnSearchTree(null,6);
-        root=d.insertOnSearchTree(root,8);
-        root=d.insertOnSearchTree(root,2);
-        root=d.insertOnSearchTree(root,1);
-        root=d.insertOnSearchTree(root,5);
-        root=d.insertOnSearchTree(root,3);
-        root=d.insertOnSearchTree(root,4);
-        System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
-        root=d.deleteOnSearchTree(root,2);
-        //System.out.println(findNode.val);
-        System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
-        //System.out.println(d.traverseInfixTree(root,new StringBuilder()).toString());
+    AvlTreeNode insertOnAvlTree(AvlTreeNode root,int value){
+        if(root==null){
+            root=new AvlTreeNode<>(value);
+        }
+        else if((int)root.val>value){
+            root.left=insertOnAvlTree((AvlTreeNode) root.left,value);
+            int leftHeight=getHeight((AvlTreeNode)root.left);
+            int rightHeight=getHeight((AvlTreeNode)root.right);
+            if(leftHeight-rightHeight==2){
+                if((int)((AvlTreeNode) root.left).val>value){
+                    root=rightRotate(root);
+                }
+                else{
+                    root.left=leftRotate((AvlTreeNode)root.left);
+                    root=rightRotate(root);
+                }
+            }
+
+        }else if((int)root.val<value) {
+            root.right=insertOnAvlTree((AvlTreeNode) root.right,value);
+            int leftHeight=getHeight((AvlTreeNode)root.left);
+            int rightHeight=getHeight((AvlTreeNode)root.right);
+            if(rightHeight-leftHeight==2){
+                if((int)((AvlTreeNode) root.right).val<value){
+                    root=leftRotate(root);
+                }
+                else{
+                    root.left=rightRotate((AvlTreeNode)root.left);
+                    root=leftRotate(root);
+                }
+            }
+        }
+        root.height= maxSonHeight(root)+1;
+        return root;
     }
 
-}
+    int getHeight(AvlTreeNode root){
+        if(root==null)
+            return -1;
+        else
+            return root.height;
+    }
+
+    int maxSonHeight(AvlTreeNode root){
+        int leftHeight=getHeight((AvlTreeNode)root.left);
+        int rightHeight=getHeight((AvlTreeNode)root.right);
+        return Math.max(leftHeight,rightHeight);
+    }
+
+    AvlTreeNode leftRotate(AvlTreeNode root){
+        AvlTreeNode right=(AvlTreeNode) root.right;
+        root.right=right.left;
+        right.left=root;
+        right.height=maxSonHeight(right)+1;
+        root.height=maxSonHeight(root)+1;
+        return right;
+    }
+
+    AvlTreeNode rightRotate(AvlTreeNode root){
+        AvlTreeNode left=(AvlTreeNode)root.left;
+        root.left=left.right;
+        left.right=root;
+        left.height= maxSonHeight(left)+1;
+        root.height= maxSonHeight(root)+1;
+        return left;
+    }
 
 
-class Node<T>{
-    Node next;
-    T val;
-    Node(T val){
-        this.val=val;
+
+    public static void main(String[] args){
+        DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
+        AvlTreeNode root=d.insertOnAvlTree(null,3);
+        root=d.insertOnAvlTree(root,2);
+        root=d.insertOnAvlTree(root,1);
+        root=d.insertOnAvlTree(root,4);
+        root=d.insertOnAvlTree(root,5);
+
+        System.out.println(d.traverseInfixTree(root,new StringBuilder()));
     }
 
 }
@@ -507,16 +559,28 @@ class ArrayQueue{
 
 }
 
+
+class Node<T>{
+    Node next;
+    T val;
+    Node(T val){
+        this.val=val;
+    }
+
+}
+
 class TreeNode<T> extends Node<T>{
     //子类域声明与父相同会有覆盖行为
     TreeNode<T> left;
     TreeNode<T> right;
-
     TreeNode(T value){
         super(value);
     }
 
-    void setValue(T value){
-        this.val=value;
-    }
+}
+
+class AvlTreeNode<T> extends TreeNode<T>{
+    int height;
+    AvlTreeNode(T value){super(value);}
+
 }
