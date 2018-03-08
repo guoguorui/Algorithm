@@ -338,11 +338,11 @@ public class DataStructuresAndAlgorithm {
             int rightHeight=getHeight((AvlTreeNode)root.right);
             if(leftHeight-rightHeight==2){
                 if((int)((AvlTreeNode) root.left).val>value){
-                    root=rightRotate(root);
+                    root= rightRotateOnAvlTree(root);
                 }
                 else{
-                    root.left=leftRotate((AvlTreeNode)root.left);
-                    root=rightRotate(root);
+                    root.left= leftRotateOnAvlTree((AvlTreeNode)root.left);
+                    root= rightRotateOnAvlTree(root);
                 }
             }
 
@@ -352,11 +352,11 @@ public class DataStructuresAndAlgorithm {
             int rightHeight=getHeight((AvlTreeNode)root.right);
             if(rightHeight-leftHeight==2){
                 if((int)((AvlTreeNode) root.right).val<value){
-                    root=leftRotate(root);
+                    root= leftRotateOnAvlTree(root);
                 }
                 else{
-                    root.left=rightRotate((AvlTreeNode)root.left);
-                    root=leftRotate(root);
+                    root.left= rightRotateOnAvlTree((AvlTreeNode)root.left);
+                    root= leftRotateOnAvlTree(root);
                 }
             }
         }
@@ -377,7 +377,7 @@ public class DataStructuresAndAlgorithm {
         return Math.max(leftHeight,rightHeight);
     }
 
-    AvlTreeNode leftRotate(AvlTreeNode root){
+    AvlTreeNode leftRotateOnAvlTree(AvlTreeNode root){
         AvlTreeNode right=(AvlTreeNode) root.right;
         root.right=right.left;
         right.left=root;
@@ -386,7 +386,14 @@ public class DataStructuresAndAlgorithm {
         return right;
     }
 
-    AvlTreeNode rightRotate(AvlTreeNode root){
+    TreeNode leftRotate(TreeNode root){
+        TreeNode right=root.right;
+        root.right=right.left;
+        right.left=root;
+        return right;
+    }
+
+    AvlTreeNode rightRotateOnAvlTree(AvlTreeNode root){
         AvlTreeNode left=(AvlTreeNode)root.left;
         root.left=left.right;
         left.right=root;
@@ -395,17 +402,100 @@ public class DataStructuresAndAlgorithm {
         return left;
     }
 
+    TreeNode rightRotate(TreeNode root){
+        TreeNode left=root.left;
+        root.left=left.right;
+        left.right=root;
+        return left;
+    }
+
+
+    TreeNode findOnSplayTree(TreeNode root,int value){
+        TreeNode currentNode=root;
+        //when direction is 1, meaning that the son is the left of father, need to rightRotate
+        ArrayStack arrayStack=new ArrayStack();
+        while(currentNode!=null){
+            try {
+                if((int)currentNode.val>value){
+                    arrayStack.push(currentNode);
+                    arrayStack.push(new Node<>(1));
+                    currentNode=currentNode.left;
+                }else if((int)currentNode.val<value){
+                    arrayStack.push(currentNode);
+                    arrayStack.push(new Node<>(2));
+                    currentNode=currentNode.right;
+                }else{
+                    arrayStack.push(currentNode);
+                    arrayStack.push(new Node<>(0));
+                    TreeNode currentRoot=currentNode;
+                    TreeNode fatherRoot=null;
+                    int fatherDirection=0;
+                    int direction=0;
+                    while(arrayStack.top()!=null){
+                        if(fatherRoot==null){
+                            direction=(int)arrayStack.pop().val;
+                            currentRoot=(TreeNode)arrayStack.pop();
+                        }else{
+                            direction=fatherDirection;
+                            currentRoot=fatherRoot;
+                        }
+                        if(arrayStack.top()!=null){
+                            fatherDirection=(int)arrayStack.pop().val;
+                            fatherRoot=(TreeNode)arrayStack.pop();
+                        }
+                        if(direction==1){
+                            if(fatherRoot!=null){
+                                if(fatherDirection==1){
+                                    fatherRoot.left=rightRotate(currentRoot);
+                                    currentRoot=fatherRoot.left;
+                                }else if(fatherDirection==2){
+                                    fatherRoot.right=rightRotate(currentRoot);
+                                    currentRoot=fatherRoot.right;
+                                }
+                            }else
+                                currentRoot=rightRotate(currentRoot);
+                        }
+                        else if(direction==2){
+                            if(fatherRoot!=null){
+                                if(fatherDirection==1){
+                                    fatherRoot.left=leftRotate(currentRoot);
+                                    currentRoot=fatherRoot.left;
+                                }else if(fatherDirection==2){
+                                    fatherRoot.right=leftRotate(currentRoot);
+                                    currentRoot=fatherRoot.right;
+                                }
+                            }else
+                                currentRoot=leftRotate(currentRoot);
+                        }
+                    }
+                    if(fatherDirection==1)
+                        currentRoot=rightRotate(fatherRoot);
+                    else
+                        currentRoot=leftRotate(fatherRoot);
+                    return currentRoot;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return root;
+    }
 
 
     public static void main(String[] args){
         DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
-        AvlTreeNode root=d.insertOnAvlTree(null,3);
-        root=d.insertOnAvlTree(root,2);
-        root=d.insertOnAvlTree(root,1);
-        root=d.insertOnAvlTree(root,4);
-        root=d.insertOnAvlTree(root,5);
-
+        TreeNode root=d.insertOnSearchTree(null,7);
+        root=d.insertOnSearchTree(root,6);
+        root=d.insertOnSearchTree(root,5);
+        root=d.insertOnSearchTree(root,4);
+        root=d.insertOnSearchTree(root,3);
+        root=d.insertOnSearchTree(root,2);
+        root=d.insertOnSearchTree(root,1);
+        root=d.findOnSplayTree(root,1);
         System.out.println(d.traverseInfixTree(root,new StringBuilder()));
+        root=d.findOnSplayTree(root,2);
+        System.out.println(d.traverseInfixTree(root,new StringBuilder()));
+
     }
 
 }
