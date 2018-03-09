@@ -1,5 +1,7 @@
 public class DataStructuresAndAlgorithm {
 
+    private int maxKeyNum =3;
+
     int maxSubsequenceSum1(int[] src){
         int max=0;
         for(int i=0;i<src.length;i++){
@@ -68,7 +70,7 @@ public class DataStructuresAndAlgorithm {
             return pow(x*x,n/2)*x;
     }
 
-    Node findOnLinkedList(Node head, int value){
+    /*Node findOnLinkedList(Node head, int value){
         Node tempNode=head;
         while(tempNode!=null){
             if((Integer)tempNode.val==value)
@@ -103,7 +105,7 @@ public class DataStructuresAndAlgorithm {
             head=newNode;
         }
         return head;
-    }
+    }*/
 
 
 
@@ -481,21 +483,117 @@ public class DataStructuresAndAlgorithm {
         return root;
     }
 
+    BTreeNode insertOnBTree(BTreeNode root,int value,boolean forward){
+        if(root==null)
+            return new BTreeNode<>(value,0);
+        //forward用于避免父传子，子传父
+        if(root.currentheight==0 || !forward){
+            root.putNewEntry(value);
+            if(root.numOfEntry==root.splitThreshold){
+                root=splitBTree(root);
+            }
+            if(root.father!=null)
+                root=root.father;
+        }else{
+            int insertPoint=root.findInsertPoint(value);
+            root=insertOnBTree(root.entries[insertPoint].subNode,value);
+        }
+       return root;
+    }
+
+    BTreeNode insertOnBTree(BTreeNode root,int value){
+        return insertOnBTree(root,value,true);
+    }
+
+    BTreeNode splitBTree(BTreeNode root){
+        BTreeNode fatherRoot=root.father;
+        if(fatherRoot==null) {
+            fatherRoot=new BTreeNode<>((int)root.entries[2].value,root.currentheight+1);
+            BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
+            siblingNode.putNewEntry((int)root.entries[4].value);
+            root.numOfEntry=2;
+            siblingNode.numOfEntry=3;
+            fatherRoot.entries[0].subNode=root;
+            fatherRoot.entries[1].subNode=siblingNode;
+            root.father=fatherRoot;
+            siblingNode.father=fatherRoot;
+            root.siblings.insertToHead(siblingNode);
+            siblingNode.siblings.insertToHead(root);
+        }else{
+            fatherRoot=insertOnBTree(fatherRoot,(int)root.entries[2].value,false);
+            BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
+            siblingNode.putNewEntry((int)root.entries[4].value);
+            root.numOfEntry=2;
+            siblingNode.numOfEntry=3;
+            fatherRoot.entries[fatherRoot.lastInsertIndex].subNode=siblingNode;
+            siblingNode.father=fatherRoot;
+            root.siblings.insertToHead(siblingNode);
+            siblingNode.siblings.insertToHead(root);
+        }
+        return fatherRoot;
+    }
+
 
     public static void main(String[] args){
         DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
-        TreeNode root=d.insertOnSearchTree(null,7);
-        root=d.insertOnSearchTree(root,6);
-        root=d.insertOnSearchTree(root,5);
-        root=d.insertOnSearchTree(root,4);
-        root=d.insertOnSearchTree(root,3);
-        root=d.insertOnSearchTree(root,2);
-        root=d.insertOnSearchTree(root,1);
-        root=d.findOnSplayTree(root,1);
-        System.out.println(d.traverseInfixTree(root,new StringBuilder()));
-        root=d.findOnSplayTree(root,2);
-        System.out.println(d.traverseInfixTree(root,new StringBuilder()));
+        BTreeNode bTreeNode=d.insertOnBTree(null,1);
+        bTreeNode=d.insertOnBTree(bTreeNode,2);
+        bTreeNode=d.insertOnBTree(bTreeNode,3);
+        bTreeNode=d.insertOnBTree(bTreeNode,4);
+        bTreeNode=d.insertOnBTree(bTreeNode,5);
+        bTreeNode=d.insertOnBTree(bTreeNode,6);
 
+    }
+
+}
+
+class LinkedList<T>{
+
+    Node head;
+
+    Node find(T value){
+        Node tempNode=head;
+        while(tempNode!=null){
+            if((Integer)tempNode.val==value)
+                return tempNode;
+            tempNode=tempNode.next;
+        }
+        return null;
+    }
+
+    void delete(T value){
+        Node tempNode=head,previousNode=head;
+        while(tempNode!=null){
+            if((Integer)tempNode.val==value){
+                if(previousNode.next==null)
+                    head=null;
+                previousNode.next=tempNode.next;
+                break;
+            }
+            previousNode=tempNode;
+            tempNode=tempNode.next;
+        }
+    }
+
+    void insert(Node previous, T value){
+        Node newNode=new Node<>(value);
+        if(previous!=null){
+            newNode.next=previous.next;
+            previous.next=newNode;
+        }
+        else{
+            head=newNode;
+        }
+    }
+
+    void insertToHead(T value){
+        if(head==null)
+            head=new Node<>(value);
+        else{
+            Node newHead=new Node<>(value);
+            newHead.next=head;
+            head=newHead;
+        }
     }
 
 }
@@ -673,4 +771,57 @@ class AvlTreeNode<T> extends TreeNode<T>{
     int height;
     AvlTreeNode(T value){super(value);}
 
+}
+
+
+//example for 2-3 tree
+//T need to addicted to Comparator
+class BTreeNode<T extends Comparable<T>>{
+    int splitThreshold=5;
+    int currentheight;
+    int numOfEntry;
+    int lastInsertIndex;
+    BTreeNode father;
+    LinkedList<BTreeNode> siblings=new LinkedList<>();
+    Entry[] entries=new Entry[splitThreshold];
+    BTreeNode(T value,int currentheight){
+        entries[0]=new Entry<>(Integer.MIN_VALUE,null);
+        entries[1]=new Entry<>(value,null);
+        numOfEntry=2;
+        this.currentheight=currentheight;
+    }
+    void putNewEntry(T value){
+        for(int i=0;i<numOfEntry;i++){
+            if(entries[i].value.compareTo(value)!=-1){
+                for(int j=numOfEntry-i+1;j>=i;j--){
+                    entries[j+1]=entries[j];
+                }
+                entries[i]=new Entry<>(value,null);
+                lastInsertIndex=i;
+                numOfEntry++;
+                return;
+            }
+        }
+        entries[numOfEntry++]=new Entry<>(value,null);
+        lastInsertIndex=numOfEntry-1;
+    }
+
+    int findInsertPoint(T value){
+        int i;
+        for(i=0;i<numOfEntry;i++){
+            if(entries[i].value.compareTo(value)!=-1){
+                return i-1;
+            }
+        }
+        return i-1;
+    }
+}
+
+class Entry<T extends Comparable<T>>{
+    T value;
+    BTreeNode subNode;
+    Entry(T value,BTreeNode subNode){
+        this.value=value;
+        this.subNode=subNode;
+    }
 }
