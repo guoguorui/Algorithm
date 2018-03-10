@@ -506,35 +506,101 @@ public class DataStructuresAndAlgorithm {
     }
 
     BTreeNode splitBTree(BTreeNode root){
+        BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
+        siblingNode.putNewEntry((int)root.entries[4].value);
+        root.numOfEntry=2;
+        siblingNode.numOfEntry=3;
         BTreeNode fatherRoot=root.father;
         if(fatherRoot==null) {
             fatherRoot=new BTreeNode<>((int)root.entries[2].value,root.currentheight+1);
-            BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
-            siblingNode.putNewEntry((int)root.entries[4].value);
-            root.numOfEntry=2;
-            siblingNode.numOfEntry=3;
             fatherRoot.entries[0].subNode=root;
             fatherRoot.entries[1].subNode=siblingNode;
             root.father=fatherRoot;
             siblingNode.father=fatherRoot;
-            root.siblings.insertToHead(siblingNode);
-            siblingNode.siblings.insertToHead(root);
         }else{
             fatherRoot=insertOnBTree(fatherRoot,(int)root.entries[2].value,false);
-            BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
-            siblingNode.putNewEntry((int)root.entries[4].value);
-            root.numOfEntry=2;
-            siblingNode.numOfEntry=3;
             fatherRoot.entries[fatherRoot.lastInsertIndex].subNode=siblingNode;
             siblingNode.father=fatherRoot;
-            root.siblings.insertToHead(siblingNode);
-            siblingNode.siblings.insertToHead(root);
         }
         return fatherRoot;
     }
 
+    Entry findOnBTree(BTreeNode root,int value){
+        if(root!=null){
+            if(root.currentheight==0){
+                for(int i=1;i<root.numOfEntry;i++){
+                    if(root.entries[i].value.compareTo(value)==0)
+                        return root.entries[i];
+                }
+            }else{
+                Entry entry;
+                int insertPoint=root.findInsertPoint(value);
+                if(root.entries[insertPoint].value.compareTo(value)==0)
+                    return root.entries[insertPoint];
+                entry=findOnBTree(root.entries[insertPoint].subNode,value);
+                return entry;
+            }
+        }
+        return null;
+    }
 
-    public static void main(String[] args){
+    void merge(BTreeNode root){
+        BTreeNode fatherRoot=root.father;
+        if(fatherRoot!=null){
+            for(int i=1;i<fatherRoot.numOfEntry-1;i++){
+                if(fatherRoot.entries[i].subNode.equals(root)){
+                    BTreeNode siblingNode=fatherRoot.entries[i+1].subNode;
+                    if(siblingNode.numOfEntry>1){
+                        root.entries[1].value=fatherRoot.entries[i].value;
+                        fatherRoot.entries[i].value=fatherRoot.entries[i+1].value;
+                        fatherRoot.entries[i+1].value=siblingNode.entries[1].value;
+                        int j;
+                        for(j=1;j<siblingNode.numOfEntry-1;j++)
+                            siblingNode.entries[j]=siblingNode.entries[j+1];
+                        siblingNode.entries[j]=null;
+                        siblingNode.numOfEntry--;
+                        root.numOfEntry++;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    void deleteOnBTree(BTreeNode root,int value,boolean forward){
+        if(root==null)
+            return;
+        if(root.currentheight==0 || !forward){
+            for(int i=1;i<root.numOfEntry;i++){
+                if(root.entries[i].value.compareTo(value)==0){
+                    for(int j=i;j<root.numOfEntry-1;j++)
+                        root.entries[j]=root.entries[j+1];
+                    root.numOfEntry--;
+                    if(root.numOfEntry==1){
+                        merge(root);
+                    }
+                    break;
+                }
+            }
+        }else{
+            Entry entry;
+            int deletePoint=root.findInsertPoint(value);
+            if(root.entries[deletePoint].value.compareTo(value)==0){
+                deleteOnBTree(root,value,false);
+            }else{
+                deleteOnBTree(root.entries[deletePoint].subNode,value,forward);
+            }
+
+        }
+    }
+
+    void deleteOnBTree(BTreeNode root,int value){
+        deleteOnBTree(root,value,true);
+    }
+
+
+
+        public static void main(String[] args){
         DataStructuresAndAlgorithm d=new DataStructuresAndAlgorithm();
         BTreeNode bTreeNode=d.insertOnBTree(null,1);
         bTreeNode=d.insertOnBTree(bTreeNode,2);
@@ -542,6 +608,7 @@ public class DataStructuresAndAlgorithm {
         bTreeNode=d.insertOnBTree(bTreeNode,4);
         bTreeNode=d.insertOnBTree(bTreeNode,5);
         bTreeNode=d.insertOnBTree(bTreeNode,6);
+        d.deleteOnBTree(bTreeNode,3);
 
     }
 
@@ -781,8 +848,9 @@ class BTreeNode<T extends Comparable<T>>{
     int currentheight;
     int numOfEntry;
     int lastInsertIndex;
+    //int indexInFather;
     BTreeNode father;
-    LinkedList<BTreeNode> siblings=new LinkedList<>();
+    //LinkedList<BTreeNode> siblings=new LinkedList<>();
     Entry[] entries=new Entry[splitThreshold];
     BTreeNode(T value,int currentheight){
         entries[0]=new Entry<>(Integer.MIN_VALUE,null);
