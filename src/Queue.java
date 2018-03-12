@@ -16,7 +16,7 @@ class ArrayQueue{
         array=new Node[currentCapacity];
     }
 
-    void enqueue(Node newTail){
+    public void enqueue(Node newTail){
         int nextIndex;
         if(array[tailIndex]==null)
             nextIndex=0;
@@ -46,7 +46,7 @@ class ArrayQueue{
         tailIndex=nextIndex;
     }
 
-    Node dequeue(){
+    public Node dequeue(){
         if(array[headIndex]==null)
             return null;
         return array[headIndex++];
@@ -62,7 +62,7 @@ class ListQueue{
         head=tail;
     }
 
-    void enqueue(Node newTail){
+    public void enqueue(Node newTail){
         if(head==null && tail==null){
             head=tail=newTail;
             return;
@@ -71,7 +71,7 @@ class ListQueue{
         tail=newTail;
     }
 
-    Node dequeue(){
+    public Node dequeue(){
         if(head==null)
             return null;
         Node oldHead=head;

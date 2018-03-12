@@ -16,7 +16,7 @@ class ArrayStack{
         array=new Node[currentCapacity];
     }
 
-    void push(Node newHead) throws Exception{
+    public void push(Node newHead) throws Exception{
         if(currentIndex==currentCapacity){
             Node[] newArray;
             currentCapacity*=2;
@@ -32,7 +32,7 @@ class ArrayStack{
         System.out.println("push node "+newHead.val);
     }
 
-    Node pop(){
+    public Node pop(){
         if(currentIndex==0)
             return null;
         Node popedNode=array[--currentIndex];
@@ -40,7 +40,7 @@ class ArrayStack{
         return popedNode;
     }
 
-    Node top(){
+    public Node top(){
         if(currentIndex==0)
             return null;
         return array[currentIndex-1];
@@ -51,13 +51,13 @@ class ArrayStack{
 class LinkedStack {
     private Node head;
 
-    void push(Node newHead){
+    public void push(Node newHead){
         newHead.next=head;
         head=newHead;
         //System.out.println("push "+newHead.val);
     }
 
-    Node pop(){
+    public Node pop(){
         if(head==null)
             return null;
         Node oldNode=head;
@@ -66,7 +66,7 @@ class LinkedStack {
         return oldNode;
     }
 
-    Node top(){
+    public Node top(){
         return head;
     }
 }

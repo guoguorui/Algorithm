@@ -1,6 +1,13 @@
 public class BinarySearchTree {
 
-    TreeNode findOnSearchTree(TreeNode root,int value){
+    private TreeNode root;
+
+    //此返回类型不安全
+    public TreeNode find(int value){
+        return findOnSearchTree(root,value);
+    }
+
+    private TreeNode findOnSearchTree(TreeNode root,int value){
         TreeNode currentNode=root;
         while(currentNode!=null){
             if((int) currentNode.val > value)
@@ -13,7 +20,11 @@ public class BinarySearchTree {
         return null;
     }
 
-    TreeNode insertOnSearchTree(TreeNode root, int value){
+    public void insert(int value){
+        root=insertOnSearchTree(root,value);
+    }
+
+    private TreeNode insertOnSearchTree(TreeNode root, int value){
         TreeNode currentNode=root;
         if(currentNode==null)
             root=new TreeNode<>(value);
@@ -37,7 +48,11 @@ public class BinarySearchTree {
         return root;
     }
 
-    TreeNode deleteOnSearchTree(TreeNode root,int value){
+    public void delete(int value){
+        root=deleteOnSearchTree(root,value);
+    }
+
+    private TreeNode deleteOnSearchTree(TreeNode root,int value){
         TreeNode currentNode=root;
         TreeNode findNode=null;
         TreeNode parentNode=null;
@@ -53,7 +68,7 @@ public class BinarySearchTree {
                 isLeft=false;
                 currentNode=currentNode.right;
             }
-            else{
+            else if((int) currentNode.val == value){
                 findNode=currentNode;
                 break;
             }
@@ -65,12 +80,12 @@ public class BinarySearchTree {
                 else
                     parentNode.right=null;
             }
-            else if(findNode.left==null && findNode.right!=null){
+            else if(findNode.left==null){
                 if(isLeft)
                     parentNode.left=findNode.right;
                 else
                     parentNode.right=findNode.right;
-            }else if(findNode.left!=null && findNode.right==null){
+            }else if(findNode.right==null){
                 if(isLeft)
                     parentNode.left=findNode.left;
                 else
@@ -91,7 +106,11 @@ public class BinarySearchTree {
         return root;
     }
 
-    StringBuilder traverseInfixTree(TreeNode root,StringBuilder appendedTo){
+    public String traverseInfixTree(){
+        return traverseInfixTree(root,new StringBuilder()).toString();
+    }
+
+    private StringBuilder traverseInfixTree(TreeNode root,StringBuilder appendedTo){
         if(root==null)
             return appendedTo;
         traverseInfixTree(root.left,appendedTo);

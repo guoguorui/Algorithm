@@ -1,5 +1,12 @@
 public class AvlTree {
-    AvlTreeNode insertOnAvlTree(AvlTreeNode root,int value){
+
+    private AvlTreeNode root;
+
+    public void insert(int value){
+        root=insertOnAvlTree(root,value);
+    }
+
+    private AvlTreeNode insertOnAvlTree(AvlTreeNode root,int value){
         if(root==null){
             root=new AvlTreeNode<>(value);
         }
@@ -35,20 +42,20 @@ public class AvlTree {
         return root;
     }
 
-    int getHeight(AvlTreeNode root){
+    private int getHeight(AvlTreeNode root){
         if(root==null)
             return -1;
         else
             return root.height;
     }
 
-    int maxSonHeight(AvlTreeNode root){
+    private int maxSonHeight(AvlTreeNode root){
         int leftHeight=getHeight((AvlTreeNode)root.left);
         int rightHeight=getHeight((AvlTreeNode)root.right);
         return Math.max(leftHeight,rightHeight);
     }
 
-    AvlTreeNode leftRotateOnAvlTree(AvlTreeNode root){
+    private AvlTreeNode leftRotateOnAvlTree(AvlTreeNode root){
         AvlTreeNode right=(AvlTreeNode) root.right;
         root.right=right.left;
         right.left=root;
@@ -59,7 +66,7 @@ public class AvlTree {
 
 
 
-    AvlTreeNode rightRotateOnAvlTree(AvlTreeNode root){
+    private AvlTreeNode rightRotateOnAvlTree(AvlTreeNode root){
         AvlTreeNode left=(AvlTreeNode)root.left;
         root.left=left.right;
         left.right=root;
@@ -67,10 +74,10 @@ public class AvlTree {
         root.height= maxSonHeight(root)+1;
         return left;
     }
+
+    private class AvlTreeNode<T> extends TreeNode<T>{
+        int height;
+        AvlTreeNode(T value){super(value);}
+    }
 }
 
-class AvlTreeNode<T> extends TreeNode<T>{
-    int height;
-    AvlTreeNode(T value){super(value);}
-
-}

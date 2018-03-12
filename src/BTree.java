@@ -1,6 +1,8 @@
 public class BTree {
 
-    BTreeNode insertOnBTree(BTreeNode root,int value,boolean forward){
+    private BTreeNode root;
+
+    private BTreeNode insertOnBTree(BTreeNode root,int value,boolean forward){
         if(root==null)
             return new BTreeNode<>(value,0);
         //forward用于避免父传子，子传父
@@ -18,11 +20,15 @@ public class BTree {
         return root;
     }
 
-    BTreeNode insertOnBTree(BTreeNode root,int value){
+    private BTreeNode insertOnBTree(BTreeNode root,int value){
         return insertOnBTree(root,value,true);
     }
 
-    BTreeNode splitBTree(BTreeNode root){
+    public void insert(int value){
+        root=insertOnBTree(root,value);
+    }
+
+    private BTreeNode splitBTree(BTreeNode root){
         BTreeNode siblingNode=new BTreeNode<>((int)root.entries[3].value,root.currentheight);
         siblingNode.putNewEntry((int)root.entries[4].value);
         root.numOfEntry=2;
@@ -42,7 +48,11 @@ public class BTree {
         return fatherRoot;
     }
 
-    BTreeEntry findOnBTree(BTreeNode root, int value){
+    public BTreeEntry find(int value){
+        return findOnBTree(root,value);
+    }
+
+    private BTreeEntry findOnBTree(BTreeNode root, int value){
         if(root!=null){
             if(root.currentheight==0){
                 for(int i=1;i<root.numOfEntry;i++){
@@ -61,7 +71,7 @@ public class BTree {
         return null;
     }
 
-    void merge(BTreeNode root){
+    private void merge(BTreeNode root){
         BTreeNode fatherRoot=root.father;
         if(fatherRoot!=null){
             for(int i=1;i<fatherRoot.numOfEntry-1;i++){
@@ -84,7 +94,7 @@ public class BTree {
         }
     }
 
-    void deleteOnBTree(BTreeNode root,int value,boolean forward){
+    private void deleteOnBTree(BTreeNode root,int value,boolean forward){
         if(root==null)
             return;
         if(root.currentheight==0 || !forward){
@@ -111,59 +121,62 @@ public class BTree {
         }
     }
 
-    void deleteOnBTree(BTreeNode root,int value){
+    private void deleteOnBTree(BTreeNode root,int value){
         deleteOnBTree(root,value,true);
     }
-
-}
-
-//example for 2-3 tree
-//T need to addicted to Comparator
-class BTreeNode<T extends Comparable<T>>{
-    int splitThreshold=5;
-    int currentheight;
-    int numOfEntry;
-    int lastInsertIndex;
-    BTreeNode father;
-    BTreeEntry[] entries=new BTreeEntry[splitThreshold];
-    BTreeNode(T value,int currentheight){
-        entries[0]=new BTreeEntry<>(Integer.MIN_VALUE,null);
-        entries[1]=new BTreeEntry<>(value,null);
-        numOfEntry=2;
-        this.currentheight=currentheight;
+    public void delete(int value){
+        deleteOnBTree(root,value);
     }
-    void putNewEntry(T value){
-        for(int i=0;i<numOfEntry;i++){
-            if(entries[i].value.compareTo(value)!=-1){
-                for(int j=numOfEntry-i+1;j>=i;j--){
-                    entries[j+1]=entries[j];
+
+    private class BTreeEntry<T extends Comparable<T>>{
+        T value;
+        private BTreeNode subNode;
+        BTreeEntry(T value, BTreeNode subNode){
+            this.value=value;
+            this.subNode=subNode;
+        }
+    }
+
+    //example for 2-3 tree
+    //T need to addicted to Comparator
+    private class BTreeNode<T extends Comparable<T>>{
+        int splitThreshold=5;
+        int currentheight;
+        int numOfEntry;
+        int lastInsertIndex;
+        BTreeNode father;
+        BTreeEntry[] entries=new BTreeEntry[splitThreshold];
+        BTreeNode(T value,int currentheight){
+            entries[0]=new BTreeEntry<>(Integer.MIN_VALUE,null);
+            entries[1]=new BTreeEntry<>(value,null);
+            numOfEntry=2;
+            this.currentheight=currentheight;
+        }
+        void putNewEntry(T value){
+            for(int i=0;i<numOfEntry;i++){
+                if(entries[i].value.compareTo(value)!=-1){
+                    for(int j=numOfEntry-i+1;j>=i;j--){
+                        entries[j+1]=entries[j];
+                    }
+                    entries[i]=new BTreeEntry<>(value,null);
+                    lastInsertIndex=i;
+                    numOfEntry++;
+                    return;
                 }
-                entries[i]=new BTreeEntry<>(value,null);
-                lastInsertIndex=i;
-                numOfEntry++;
-                return;
             }
+            entries[numOfEntry++]=new BTreeEntry<>(value,null);
+            lastInsertIndex=numOfEntry-1;
         }
-        entries[numOfEntry++]=new BTreeEntry<>(value,null);
-        lastInsertIndex=numOfEntry-1;
-    }
 
-    int findInsertPoint(T value){
-        int i;
-        for(i=0;i<numOfEntry;i++){
-            if(entries[i].value.compareTo(value)!=-1){
-                return i-1;
+        int findInsertPoint(T value){
+            int i;
+            for(i=0;i<numOfEntry;i++){
+                if(entries[i].value.compareTo(value)!=-1){
+                    return i-1;
+                }
             }
+            return i-1;
         }
-        return i-1;
     }
 }
 
-class BTreeEntry<T extends Comparable<T>>{
-    T value;
-    BTreeNode subNode;
-    BTreeEntry(T value, BTreeNode subNode){
-        this.value=value;
-        this.subNode=subNode;
-    }
-}

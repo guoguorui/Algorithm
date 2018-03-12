@@ -1,6 +1,9 @@
 public class SplayTree {
 
-    TreeNode leftRotate(TreeNode root){
+
+    private TreeNode root;
+
+    private TreeNode leftRotate(TreeNode root){
         TreeNode right=root.right;
         root.right=right.left;
         right.left=root;
@@ -8,14 +11,18 @@ public class SplayTree {
     }
 
 
-    TreeNode rightRotate(TreeNode root){
+    private TreeNode rightRotate(TreeNode root){
         TreeNode left=root.left;
         root.left=left.right;
         left.right=root;
         return left;
     }
 
-    TreeNode findOnSplayTree(TreeNode root,int value){
+    public TreeNode find(int value){
+        return findOnSplayTree(root,value);
+    }
+
+    private TreeNode findOnSplayTree(TreeNode root,int value){
         TreeNode currentNode=root;
         //when direction is 1, meaning that the son is the left of father, need to rightRotate
         ArrayStack arrayStack=new ArrayStack();

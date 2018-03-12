@@ -1,8 +1,8 @@
 class LinkedList<T>{
 
-    Node head;
+    private Node head;
 
-    Node find(T value){
+    public Node find(T value){
         Node tempNode=head;
         while(tempNode!=null){
             if((Integer)tempNode.val==value)
@@ -12,7 +12,7 @@ class LinkedList<T>{
         return null;
     }
 
-    void delete(T value){
+    public void delete(T value){
         Node tempNode=head,previousNode=head;
         while(tempNode!=null){
             if((Integer)tempNode.val==value){
@@ -26,7 +26,7 @@ class LinkedList<T>{
         }
     }
 
-    void insert(Node previous, T value){
+    public void insert(Node previous, T value){
         Node newNode=new Node<>(value);
         if(previous!=null){
             newNode.next=previous.next;
@@ -37,7 +37,7 @@ class LinkedList<T>{
         }
     }
 
-    void insertToHead(T value){
+    public void insertToHead(T value){
         if(head==null)
             head=new Node<>(value);
         else{
@@ -47,7 +47,7 @@ class LinkedList<T>{
         }
     }
 
-    void insertToHead(Node node){
+    public void insertToHead(Node node){
         if(head==null)
             head=node;
         else{

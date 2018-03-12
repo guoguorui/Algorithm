@@ -190,18 +190,17 @@ public class DataStructuresAndAlgorithm {
     }
 
     public static void main(String[] args){
-        BTree bTree=new BTree();
-        BTreeNode bTreeNode=bTree.insertOnBTree(null,1);
-        bTreeNode=bTree.insertOnBTree(bTreeNode,2);
-        bTreeNode=bTree.insertOnBTree(bTreeNode,3);
-        bTreeNode=bTree.insertOnBTree(bTreeNode,4);
-        bTreeNode=bTree.insertOnBTree(bTreeNode,5);
-        bTreeNode=bTree.insertOnBTree(bTreeNode,6);
-        bTree.deleteOnBTree(bTreeNode,3);
+        HashTable hashTable=new HashTable();
+        hashTable.insertOnHashTable("hello","nico");
+        System.out.println(hashTable.findOnHashTable("hello"));
     }
 
 }
 
+
+//应该将next设置为private，然后将访问器方法public，要不然就将返回给用户的部分信息封装在另一类型对象里
+//TreeNode也是同样的道理，笔者就不做修改了
+//更常见的用法应该是对find返回的Node进一步计算或处理再返给用户
 class Node<T>{
     Node next;
     T val;
@@ -211,6 +210,9 @@ class Node<T>{
 
 }
 
+
+
+
 class TreeNode<T> extends Node<T>{
     //子类域声明与父相同会有覆盖行为
     TreeNode<T> left;
@@ -219,7 +221,3 @@ class TreeNode<T> extends Node<T>{
         super(value);
     }
 }
-
-
-
-
