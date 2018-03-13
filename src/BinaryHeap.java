@@ -22,7 +22,7 @@ public class BinaryHeap {
             System.arraycopy(nodes,0,newNodes,0,nodes.length);
             nodes=newNodes;
         }
-        //将高值拉下来，让插入值填入气泡
+        //把低位的气泡往根方向推，可能终结在任意一层
         nodes[size]=new TreeNode<>(value);
         int i;
         for(i=size;(int)nodes[i/2].val>value;i/=2)
@@ -31,7 +31,7 @@ public class BinaryHeap {
         size++;
     }
 
-    //把最高位的气泡往树叶方向推
+    //把最高位的气泡往树叶方向推，一定推到叶子层
     public TreeNode deleteMin(){
         if(size==1)
             return null;
