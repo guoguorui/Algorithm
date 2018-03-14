@@ -35,20 +35,22 @@ public class BinaryHeap {
     public TreeNode deleteMin(){
         if(size==1)
             return null;
-        TreeNode minNode=nodes[1];
+        //nodes[1]会被修改，需要拷贝
+        TreeNode minNode=new TreeNode<>(nodes[1].val);
         if(size==2){
             nodes[1]=null;
-            return nodes[1];
+            return minNode;
         }
         int nextMinIndex=0;
         for(int i=1;i*2<size;i=nextMinIndex){
-            if(nodes[i*2+1]!=null && (int)nodes[i*2].val>(int)nodes[i*2+1].val){
+            if(i*2+1<size && (int)nodes[i*2].val>(int)nodes[i*2+1].val){
                 nextMinIndex=i*2+1;
             }else
                 nextMinIndex=i*2;
             nodes[i].val=nodes[nextMinIndex].val;
         }
-        nodes[nextMinIndex].val=nodes[size-1].val;
+        if(size>3)
+            nodes[nextMinIndex].val=nodes[size-1].val;
         nodes[size-1]=null;
         size--;
         return minNode;
@@ -59,17 +61,28 @@ public class BinaryHeap {
         for(int i=0;i<srcs.length;i++)
             binaryHeap.nodes[i+1]=new TreeNode<>(srcs[i]);
         binaryHeap.size=srcs.length+1;
-        //倒数第二层的对后一个节点开始
-        for(int j=binaryHeap.size/2-1;j>0;j--){
+        //倒数第二层的对后一个节点开始,这里无法完全包围所有情况，需要修正
+        int sizeAlignment=alignment(binaryHeap.size);
+        for(int j=sizeAlignment/2-1;j>0;j--){
             exchange(binaryHeap,j);
         }
         return binaryHeap;
     }
 
+    private static int alignment(int n){
+        if(n<=0)
+            return 1;
+        int i=0,t=0;
+        while((t=DataStructuresAndAlgorithm.pow(2,i))<n)
+            i++;
+        return t;
+    }
+
+
     private static void exchange(BinaryHeap binaryHeap,int j){
         int minIndex;
         while(j*2<binaryHeap.size){
-            if((int)binaryHeap.nodes[j*2+1].val<(int)binaryHeap.nodes[j*2].val)
+            if(j*2+1<binaryHeap.size && (int)binaryHeap.nodes[j*2+1].val<(int)binaryHeap.nodes[j*2].val)
                 minIndex=j*2+1;
             else
                 minIndex=j*2;
