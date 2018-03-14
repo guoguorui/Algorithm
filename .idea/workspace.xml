@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e999a802-9c4b-47ea-91a9-3a52ddf75fb6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BinaryHeap.java" afterPath="$PROJECT_DIR$/src/BinaryHeap.java" />
-    </list>
+    <list default="true" id="e999a802-9c4b-47ea-91a9-3a52ddf75fb6" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,7 +25,7 @@
       <file leaf-file-name="BinaryHeap.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/BinaryHeap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
+            <state relative-caret-position="1140">
               <caret line="61" column="24" lean-forward="true" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
               <folding>
                 <element signature="e#125#126#0" expanded="true" />
@@ -37,14 +35,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LeftHeap.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LeftHeap.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/LeftHeap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
+            <state relative-caret-position="798">
               <caret line="42" column="23" lean-forward="false" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="23" />
               <folding>
                 <element signature="e#1518#1519#0" expanded="true" />
                 <element signature="e#1556#1557#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BinomialQueue.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/BinomialQueue.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="129">
+              <caret line="22" column="12" lean-forward="false" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+              <folding>
+                <element signature="e#80#81#0" expanded="true" />
+                <element signature="e#104#105#0" expanded="true" />
+                <element signature="e#138#139#0" expanded="true" />
+                <element signature="e#182#183#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,6 +94,7 @@
         <option value="$PROJECT_DIR$/src/BTree.java" />
         <option value="$PROJECT_DIR$/src/BinaryHeap.java" />
         <option value="$PROJECT_DIR$/src/LeftHeap.java" />
+        <option value="$PROJECT_DIR$/src/BinomialQueue.java" />
       </list>
     </option>
   </component>
@@ -123,12 +137,6 @@
               <item name="Algorithm" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Algorithm" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Algorithm" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="DataStructuresAndAlgorithm.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -159,7 +167,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.LeftHeap">
+  <component name="RunManager" selected="Application.BinomialQueue">
     <configuration name="BinaryHeap" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="BinaryHeap" />
@@ -177,6 +185,20 @@
     <configuration name="BinarySearchTree" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="BinarySearchTree" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Algorithm" />
+      <envs />
+    </configuration>
+    <configuration name="BinomialQueue" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="BinomialQueue" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -296,18 +318,20 @@
       <properties />
       <listeners />
     </configuration>
-    <list size="4">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Application.DataStructuresAndAlgorithm" />
       <item index="1" class="java.lang.String" itemvalue="Application.BinarySearchTree" />
       <item index="2" class="java.lang.String" itemvalue="Application.BinaryHeap" />
       <item index="3" class="java.lang.String" itemvalue="Application.LeftHeap" />
+      <item index="4" class="java.lang.String" itemvalue="Application.BinomialQueue" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Application.LeftHeap" />
-        <item index="1" class="java.lang.String" itemvalue="Application.BinaryHeap" />
-        <item index="2" class="java.lang.String" itemvalue="Application.BinarySearchTree" />
-        <item index="3" class="java.lang.String" itemvalue="Application.DataStructuresAndAlgorithm" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Application.BinomialQueue" />
+        <item index="1" class="java.lang.String" itemvalue="Application.LeftHeap" />
+        <item index="2" class="java.lang.String" itemvalue="Application.BinaryHeap" />
+        <item index="3" class="java.lang.String" itemvalue="Application.BinarySearchTree" />
+        <item index="4" class="java.lang.String" itemvalue="Application.DataStructuresAndAlgorithm" />
       </list>
     </recent_temporary>
   </component>
@@ -363,7 +387,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="55" />
+      <option name="time" value="60" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -594,17 +618,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/BinaryHeap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="61" column="24" lean-forward="true" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
-          <folding>
-            <element signature="e#125#126#0" expanded="true" />
-            <element signature="e#149#150#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/DataStructuresAndAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -615,11 +628,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/LeftHeap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
+        <state relative-caret-position="798">
           <caret line="42" column="23" lean-forward="false" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="23" />
           <folding>
             <element signature="e#1518#1519#0" expanded="true" />
             <element signature="e#1556#1557#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BinaryHeap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1140">
+          <caret line="61" column="24" lean-forward="true" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
+          <folding>
+            <element signature="e#125#126#0" expanded="true" />
+            <element signature="e#149#150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BinomialQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="22" column="12" lean-forward="false" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+          <folding>
+            <element signature="e#80#81#0" expanded="true" />
+            <element signature="e#104#105#0" expanded="true" />
+            <element signature="e#138#139#0" expanded="true" />
+            <element signature="e#182#183#0" expanded="true" />
           </folding>
         </state>
       </provider>
