@@ -119,7 +119,7 @@ public class Sort {
 
 
     public static void main(String[] args){
-        int[] src=new int[]{2,46,13,23};
+        int[] src=new int[]{23,46,2,23,25,25};
         int[] temp=quickSort(src);
         for(int i=0;i<temp.length;i++)
             System.out.print(temp[i]+" ");

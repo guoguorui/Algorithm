@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 public class DataStructuresAndAlgorithm {
 
     int maxSubsequenceSum1(int[] src){
@@ -188,6 +190,62 @@ public class DataStructuresAndAlgorithm {
         }
         return (TreeNode)arrayStack.pop();
     }
+
+    public static void stackPre(TreeNode root){
+        if(root==null)
+            return;
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode currentNode=root;
+        while(!stack.empty() || currentNode!=null){
+            while(currentNode!=null){
+                System.out.print(currentNode.val+" ");
+                stack.push(currentNode);
+                currentNode=currentNode.left;
+            }
+            currentNode=stack.pop();
+            currentNode=currentNode.right;
+        }
+    }
+
+    public static void stackIn(TreeNode root){
+        if(root==null)
+            return;
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode currentNode=root;
+        while(!stack.empty() || currentNode!=null){
+            while(currentNode!=null){
+                stack.push(currentNode);
+                currentNode=currentNode.left;
+            }
+            currentNode=stack.pop();
+            System.out.print(currentNode.val+" ");
+            currentNode=currentNode.right;
+        }
+    }
+
+    public static void stackPost(TreeNode root){
+        if(root==null)
+            return;
+        Stack<TreeNode> stack=new Stack<>();
+        TreeNode currentNode=root;
+        TreeNode lastPopNode=new TreeNode(-1);
+        while(!stack.empty() || currentNode!=null) {
+            while(currentNode!=null && currentNode.left!=lastPopNode){
+                stack.push(currentNode);
+                currentNode=currentNode.left;
+            }
+            currentNode=stack.pop();
+            if(currentNode.right==null || currentNode.right==lastPopNode) {
+                System.out.print(currentNode.val + " ");
+                lastPopNode = currentNode;
+                currentNode=null;
+            } else{
+                stack.push(currentNode);
+                currentNode=currentNode.right;
+            }
+        }
+    }
+
 
     public static void main(String[] args){
         HashTable hashTable=new HashTable();
