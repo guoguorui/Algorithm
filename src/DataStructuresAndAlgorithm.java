@@ -230,7 +230,7 @@ public class DataStructuresAndAlgorithm {
         TreeNode currentNode=root;
         TreeNode lastPopNode=new TreeNode(-1);
         while(!stack.empty() || currentNode!=null) {
-            while(currentNode!=null && currentNode.left!=lastPopNode){
+            while(currentNode!=null){
                 stack.push(currentNode);
                 currentNode=currentNode.left;
             }
