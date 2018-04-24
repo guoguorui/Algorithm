@@ -1,6 +1,8 @@
+import java.util.Stack;
+
 public class Sort {
 
-    public static int[] insertSort(int[] src){
+    public static void insertSort(int[] src){
         int temp,j;
         for(int i=0;i<src.length;i++){
             temp=src[i];
@@ -8,10 +10,9 @@ public class Sort {
                 src[j]=src[j-1];
             src[j]=temp;
         }
-        return src;
     }
 
-    public static int[] shellSort(int[] src){
+    public static void shellSort(int[] src){
         int stride,i,j,temp;
         //Hibbard序列为1,3,7,...2^k-1
         //Sedgewick序列为4^k-3*2^k+1
@@ -25,21 +26,18 @@ public class Sort {
                 src[j]=temp;
             }
         }
-        return src;
     }
 
-    public static int[] heapSort(int[] src){
+    public static void heapSort(int[] src){
         BinaryHeap binaryHeap=BinaryHeap.buildHeap(src);
         for(int i=0;i<src.length;i++)
             src[i]=(int)binaryHeap.deleteMin().val;
-        return src;
     }
 
-    public static int[] mergeSort(int[] src){
+    public static void mergeSort(int[] src){
         int[] temp=new int[src.length];
         //启动方法初始空间和边界，其他交给递归
         mergeRecursion(src,temp,0,src.length-1);
-        return temp;
     }
 
     private static void mergeRecursion(int[] src,int[] temp,int left,int right){
@@ -67,9 +65,8 @@ public class Sort {
         System.arraycopy(temp,leftStart,src,leftStart,rightEnd-leftStart+1);
     }
 
-    public static int[] quickSort(int[] src){
+    public static void quickSort(int[] src){
         quickSortRecursion(src,0,src.length-1);
-        return src;
     }
 
     private static void quickSortRecursion(int[] src,int left,int right){
@@ -98,7 +95,6 @@ public class Sort {
     }
 
     private static void swapMedian(int[] src,int left,int mid,int right){
-        int temp;
         if(src[left]>src[mid]){
             swap(src,left,mid);
         }
@@ -117,12 +113,54 @@ public class Sort {
         src[left]=temp;
     }
 
+    public static void quickSortWithStack(int[] src){
+        if(src==null || src.length<2)
+            return;
+        Stack<Integer> stack=new Stack<>();
+        stack.push(0);
+        stack.push(src.length-1);
+        while(!stack.isEmpty()){
+            int right=stack.pop();
+            int left=stack.pop();
+            int mid=quickSortPartition(src,left,right);
+            if(mid-1>left){
+                stack.push(left);
+                stack.push(mid-1);
+            }
+            if(mid+1<right){
+                stack.push(mid+1);
+                stack.push(right);
+            }
+        }
+    }
+
+    private static int quickSortPartition(int[] src,int left,int right){
+        int i=left;
+        int j=right;
+        while(i<j){
+            int pivot=src[i];
+            while(i<j && src[j]>pivot)
+                j--;
+            if(i<j){
+                src[i]=src[j];
+                i++;
+            }
+            while(i<j && src[i]<pivot)
+                i++;
+            if(i<j){
+                src[j]=src[i];
+                j--;
+            }
+            src[i]=pivot;
+        }
+        return i;
+    }
 
     public static void main(String[] args){
-        int[] src=new int[]{23,46,2,23,25,25};
-        int[] temp=quickSort(src);
-        for(int i=0;i<temp.length;i++)
-            System.out.print(temp[i]+" ");
+        int[] src=new int[]{2,5,1,3,3,6,4};
+        quickSortWithStack(src);
+        for(int i=0;i<src.length;i++)
+            System.out.print(src[i]+" ");
     }
 
 
