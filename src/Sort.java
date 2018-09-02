@@ -2,11 +2,11 @@ import java.util.Stack;
 
 public class Sort {
 
-    public static void insertSort(int[] src) {
+    private static void insertSort(int[] src, int left, int right) {
         int temp, j;
-        for (int i = 0; i < src.length; i++) {
+        for (int i = left; i <= right; i++) {
             temp = src[i];
-            for (j = i; j > 0 && src[j - 1] > temp; j--)
+            for (j = i; j > left && src[j - 1] > temp; j--)
                 src[j] = src[j - 1];
             src[j] = temp;
         }
@@ -72,21 +72,25 @@ public class Sort {
     private static void quickSortRecursion(int[] src, int left, int right) {
         if (left >= right)
             return;
-        int pivot = swapMedian(src, left, right);
-        int i = left;
-        int j = right - 1;
-        while (true) {
-            while (src[++i] < pivot) ;
-            while (src[--j] > pivot) ;
-            if (i < j) {
-                swap(src, i, j);
-            } else {
-                break;
+        if (right - left < 10) {
+            insertSort(src, left, right);
+        } else {
+            int pivot = swapMedian(src, left, right);
+            int i = left;
+            int j = right - 1;
+            while (true) {
+                while (src[++i] < pivot) ;
+                while (src[--j] > pivot) ;
+                if (i < j) {
+                    swap(src, i, j);
+                } else {
+                    break;
+                }
             }
+            swap(src, i, right - 1);
+            quickSortRecursion(src, left, i - 1);
+            quickSortRecursion(src, i + 1, right);
         }
-        swap(src, i, right - 1);
-        quickSortRecursion(src, left, i - 1);
-        quickSortRecursion(src, i + 1, right);
     }
 
     private static int swapMedian(int[] src, int left, int right) {
