@@ -4,14 +4,29 @@ public class Sort {
 
     private static void bubbleSort(int[] src, int left, int right) {
         // 外层循环的i用于标志循环的次数，与位置无关
-        int len = right - left;
-        for (int i = 0; i < len - 1; i++) {
+        int count = right - left;
+        for (int i = 0; i < count; i++) {
             // 内层循环每次都从头开始，选出最大的元素放到后面
             for (int j = left; j < right - i; j++) {
                 if (src[j] > src[j + 1]) {
                     swap(src, j, j + 1);
                 }
             }
+        }
+    }
+
+    private static void selectionSort(int[] src, int left, int right) {
+        int count = right - left;
+        for (int i = 0; i < count; i++) {
+            int max = Integer.MIN_VALUE;
+            int maxIndex = -1;
+            for (int j = left; j < right - i; j++) {
+                if (src[j] > max) {
+                    max = src[j];
+                    maxIndex = j;
+                }
+            }
+            swap(src, maxIndex, right - i);
         }
     }
 
