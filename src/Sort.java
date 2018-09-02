@@ -136,30 +136,25 @@ public class Sort {
     }
 
     private static int quickSortPartition(int[] src, int left, int right) {
+        int pivot = swapMedian(src, left, right);
         int i = left;
-        int j = right;
-        while (i < j) {
-            int pivot = src[i];
-            while (i < j && src[j] > pivot)
-                j--;
+        int j = right - 1;
+        while (true) {
+            while (src[++i] < pivot) ;
+            while (src[--j] > pivot) ;
             if (i < j) {
-                src[i] = src[j];
-                i++;
+                swap(src, i, j);
+            } else {
+                break;
             }
-            while (i < j && src[i] < pivot)
-                i++;
-            if (i < j) {
-                src[j] = src[i];
-                j--;
-            }
-            src[i] = pivot;
         }
+        swap(src, i, right - 1);
         return i;
     }
 
     public static void main(String[] args) {
         int[] src = new int[]{2, 5, 1, 3, 3, 6, 4};
-        quickSortRecursion(src, 0, src.length - 1);
+        quickSortWithStack(src);
         for (int i : src) {
             System.out.print(i + " ");
         }
