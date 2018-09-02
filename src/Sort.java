@@ -2,6 +2,19 @@ import java.util.Stack;
 
 public class Sort {
 
+    private static void bubbleSort(int[] src, int left, int right) {
+        // 外层循环的i用于标志循环的次数，与位置无关
+        int len = right - left;
+        for (int i = 0; i < len - 1; i++) {
+            // 内层循环每次都从头开始，选出最大的元素放到后面
+            for (int j = left; j < right - i; j++) {
+                if (src[j] > src[j + 1]) {
+                    swap(src, j, j + 1);
+                }
+            }
+        }
+    }
+
     private static void insertSort(int[] src, int left, int right) {
         int temp, j;
         for (int i = left; i <= right; i++) {
@@ -12,7 +25,7 @@ public class Sort {
         }
     }
 
-    public static void shellSort(int[] src) {
+    private static void shellSort(int[] src) {
         int stride, i, j, temp;
         //Hibbard序列为1,3,7,...2^k-1
         //Sedgewick序列为4^k-3*2^k+1
@@ -28,13 +41,14 @@ public class Sort {
         }
     }
 
-    public static void heapSort(int[] src) {
+
+    private static void heapSort(int[] src) {
         BinaryHeap binaryHeap = BinaryHeap.buildHeap(src);
         for (int i = 0; i < src.length; i++)
             src[i] = (int) binaryHeap.deleteMin().val;
     }
 
-    public static void mergeSort(int[] src) {
+    private static void mergeSort(int[] src) {
         int[] temp = new int[src.length];
         //启动方法初始空间和边界，其他交给递归
         mergeRecursion(src, temp, 0, src.length - 1);
@@ -154,7 +168,7 @@ public class Sort {
 
     public static void main(String[] args) {
         int[] src = new int[]{2, 5, 1, 3, 3, 6, 4};
-        quickSortWithStack(src);
+        bubbleSort(src, 0, src.length - 1);
         for (int i : src) {
             System.out.print(i + " ");
         }
